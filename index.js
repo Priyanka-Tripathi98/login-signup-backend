@@ -15,7 +15,10 @@ connectDB()
 //   res.send("API is working");
 // });
 
-app.use(cors())
+const cors = require('cors');
+app.use(cors({
+  origin: 'https://login-signup-frontend-bx3j.onrender.com'
+}));
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
