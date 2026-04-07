@@ -1,32 +1,37 @@
 const express = require("express");
-
-const cors = require ("cors")
+const cors = require("cors"); // Kept this one
 const app = express();
 
 require("dotenv").config();
-const useRoutes = require("./routes/useRoutes")
-const loginRoutes = require("./routes/loginRoutes")
-const dashRoutes = require("./routes/dashboardRoute")
-const productRoutes = require("./routes/productRoutes")
-const connectDB = require("./config/db")
-connectDB()
+const useRoutes = require("./routes/useRoutes");
+const loginRoutes = require("./routes/loginRoutes");
+const dashRoutes = require("./routes/dashboardRoute");
+const productRoutes = require("./routes/productRoutes");
+const connectDB = require("./config/db");
 
-// app.get("/", (req, res) => {
-//   res.send("API is working");
-// });
+connectDB();
 
-const cors = require('cors');
+// --- Middleware Setup ---
+
+// 1. Fixed CORS (Removed the duplicate 'const cors' line)
 app.use(cors({
-  origin: 'https://login-signup-frontend-bx3j.onrender.com'
+  origin: 'https://login-signup-frontend-bx3j.onrender.com',
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use("/signup",useRoutes)
-app.use("/login",loginRoutes)
-app.use("/dashboard",dashRoutes)
-app.use("/product",productRoutes)
-app.listen(8001, () =>{
-    console.log("server is running or port http://localhost:8001")
-})
+// --- Routes ---
+app.use("/signup", useRoutes);
+app.use("/login", loginRoutes);
+app.use("/dashboard", dashRoutes);
+app.use("/product", productRoutes);
+
+// Use process.env.PORT for Render compatibility, fallback to 8001 locally
+const PORT = process.env.PORT || 8001;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
